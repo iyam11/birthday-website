@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Selamat Ulang Tahun 🎉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+    body { font-family: 'Poppins', sans-serif; }
+
+    .heart {
+      position: fixed;
+      font-size: 1.5rem;
+      animation: fly 4s linear infinite;
+      pointer-events: none;
+      color: #f87171;
+    }
+
+    @keyframes fly {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+    }
+
+    .heart-burst {
+      position: absolute;
+      pointer-events: none;
+      animation: burst 1s ease-out forwards;
+      font-size: 1.5rem;
+    }
+
+    @keyframes burst {
+      0% { transform: scale(0.5); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+
+    /* Confetti */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #fbbf24;
+      animation: confetti-fall 2s ease-out forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(0) rotate(0); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="bg-pink-50 text-gray-800">
+
+  <!-- Audio -->
+  <audio id="bgMusic" src="assets/lagu.mp3" autoplay loop></audio>
+
+  <!-- Loading -->
+  <div id="loading" class="fixed inset-0 bg-pink-100 flex items-center justify-center z-50">
+    <div class="text-center animate-pulse">
+      <div class="text-3xl font-bold text-pink-500">Tunggu yaa... 🎁</div>
+      <p class="text-sm text-pink-400 mt-2">Lagi siapin kejutan ulang tahun buat kamu...</p>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="text-center py-20 px-4 sm:px-8 bg-pink-100 shadow-inner">
+    <h1 class="text-4xl md:text-6xl font-bold text-pink-600">
+      <span id="typedText"></span><span class="animate-pulse">|</span>
+    </h1>
+    <p class="mt-4 text-xl">Hari ini spesial karena kamu lahir ke dunia. Selamat ulang tahun, cinta! 💖</p>
+    <div class="mt-6 flex justify-center gap-4 flex-wrap">
+      <button onclick="alertLove()" class="px-6 py-3 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition">Lihat Pesan Spesial 🎂</button>
+      <a href="surat.html" class="px-6 py-3 bg-white border border-pink-300 text-pink-500 rounded-full hover:bg-pink-100 transition">Baca Surat 💌</a>
+      <button onclick="toggleMusic()" id="musicBtn" class="px-6 py-3 bg-yellow-400 text-white rounded-full hover:bg-yellow-500 transition">⏸️ Musik</button>
+    </div>
+  </section>
+
+  <!-- Quotes -->
+  <section class="py-16 bg-white">
+    <h2 class="text-3xl font-bold text-center text-pink-500 mb-4">Ucapan Sayang 🎈</h2>
+    <div id="quoteBox" class="text-center text-xl italic max-w-xl mx-auto text-pink-700 transition-opacity duration-700">
+      "Hari ini spesial, karena kamu lahir dan menghiasi hidupku. Happy birthday, sayang!"
+    </div>
+    <div class="text-center mt-6">
+      <button id="heartBtn" class="text-4xl animate-pulse text-pink-500 hover:scale-125 transition duration-300">🎉</button>
+    </div>
+  </section>
+
+  <!-- Galeri -->
+  <section class="py-16 bg-pink-50">
+    <h2 class="text-3xl font-bold text-center text-pink-500 mb-8">Contoh Manusia Cantik 📸</h2>
+    <div class="px-4">
+      <img id="slideshow" src="assets/yys1.jpg"
+        class="rounded-xl shadow-xl mx-auto w-[300px] sm:w-[400px] md:w-[500px] h-auto object-cover transition duration-500">
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 bg-pink-100 text-sm text-gray-600 mt-16 px-4">
+    &copy; 2025 | Ucapan ulang tahun dari Ilham untuk kamu yang spesial 🎂💞
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const typedStrings = ["Happy Birthday Azzahra Laraswati Karimah 💖", "Your Happy Day 🎉", "Best Wishes For You ✨"];
+    let typedIndex = 0, charIndex = 0;
+    function typeEffect() {
+      const typedText = document.getElementById("typedText");
+      if (charIndex < typedStrings[typedIndex].length) {
+        typedText.textContent += typedStrings[typedIndex].charAt(charIndex++);
+        setTimeout(typeEffect, 100);
+      } else {
+        setTimeout(() => {
+          typedText.textContent = "";
+          charIndex = 0;
+          typedIndex = (typedIndex + 1) % typedStrings.length;
+          typeEffect();
+        }, 2000);
+      }
+    }
+
+    const quotes = [
+      "Selamat ulang tahun! Kamu adalah alasan senyumku setiap hari.",
+      "Doa terbaikku selalu menyertaimu di hari istimewa ini.",
+      "Semoga di usia baru ini, cinta kita makin kuat dan indah.",
+      "Tak ada hadiah yang cukup mewakili betapa berharganya kamu untukku.",
+      "Bertambah usia, bertambah pula cintaku padamu 💞"
+    ];
+    let quoteIndex = 0;
+    function rotateQuote() {
+      const quoteBox = document.getElementById("quoteBox");
+      quoteBox.style.opacity = 0;
+      setTimeout(() => {
+        quoteBox.textContent = `"${quotes[quoteIndex]}"`;
+        quoteBox.style.opacity = 1;
+        quoteIndex = (quoteIndex + 1) % quotes.length;
+      }, 500);
+    }
+
+    function showSlide() {
+      const images = ["assets/yys1.jpg", "assets/yys2.jpg", "assets/yys3.jpg"];
+      const slide = document.getElementById("slideshow");
+      slide.src = images[slideIndex];
+      slideIndex = (slideIndex + 1) % images.length;
+    }
+
+    function alertLove() {
+      alert("Selamat ulang tahun, cintaku! Semoga kamu selalu bahagia dan semua mimpimu tercapai 🎂💖");
+    }
+
+    function toggleMusic() {
+      const music = document.getElementById("bgMusic");
+      const btn = document.getElementById("musicBtn");
+      if (music.paused) {
+        music.play();
+        btn.textContent = "⏸️ Musik";
+      } else {
+        music.pause();
+        btn.textContent = "▶️ Musik";
+      }
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.innerText = "🎂";
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.bottom = "0px";
+      heart.style.fontSize = Math.random() * 20 + 16 + "px";
+      heart.style.opacity = Math.random();
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 4000);
+    }
+
+    function createConfetti(x, y) {
+      for (let i = 0; i < 30; i++) {
+        const c = document.createElement("div");
+        c.classList.add("confetti");
+        c.style.left = x + (Math.random() * 100 - 50) + "px";
+        c.style.top = y + (Math.random() * 50 - 25) + "px";
+        c.style.backgroundColor = ["#f87171", "#facc15", "#4ade80", "#60a5fa"][Math.floor(Math.random() * 4)];
+        c.style.position = "absolute";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 2000);
+      }
+    }
+
+    // Event
+    let slideIndex = 0;
+    document.getElementById("heartBtn").addEventListener("click", (e) => createConfetti(e.clientX, e.clientY));
+    window.addEventListener("load", () => {
+      document.getElementById("loading").style.display = "none";
+      const music = document.getElementById("bgMusic");
+      music.play().catch(() => {
+        document.addEventListener("click", () => music.play(), { once: true });
+      });
+    });
+
+    // Start
+    typeEffect();
+    setInterval(showSlide, 3000);
+    setInterval(rotateQuote, 5000);
+    setInterval(createHeart, 300);
+  </script>
+</body>
+</html>
